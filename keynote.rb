@@ -3,7 +3,7 @@
 #    Toggle slides from .txt file delimeted by \n----\n            #
 #                                                                  #
 #    Use:                                                          #
-#      - any key to go forward                                     #
+#      - any key to toggle forward,                                #
 #      - 'z' to go back      				                       #
 #      - 'a' for auto-mode                                         #
 #                                                                  #
@@ -76,18 +76,30 @@ def display(slide)
   $screensize = t.screen_size
   system "clear" 
 #  system "cls"
-  dY = measure(0)
-  dX = measure(1,slide.length)
+  dY = measure(0,slide.split("\n").length)
+  prepare(slide)
   print "\n"*dY
-  print " "*dX
-  print  slide
+  print  prepare(slide)
   print "\n"*(dY-1)
   $autoMode ? runAuto() : waitForNext()
 end
 
+def prepare(slide)
+  linesArr = slide.split("\n")
+  maxLength = (linesArr.max {|a,b| a.length <=> b.length}).length
+  dX = measure(1,maxLength)
+  return " "*dX + linesArr.join("\n" + " "*dX)
+  
+end
+
 $sleepDelay = 1.5
 $currIndex = 0
-$slides = IO.read('slides_one_line.txt').split("\n----\n")
+$slides = IO.read('slides_multi_line.txt').split("\n----\n")
 $autoMode = false
 selSlide
+
+
+
+
+
 
